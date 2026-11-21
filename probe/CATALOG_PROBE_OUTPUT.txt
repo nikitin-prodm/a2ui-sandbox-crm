@@ -1,0 +1,19 @@
+=== Custom Catalog Registration Probe ===
+artifact: androidx.a2ui:a2ui-engine:1.0.0-alpha02 (A2uiCoreCatalog + A2uiCoreSchemaValidator)
+
+[1] Registry lookup: crmCatalog.componentDefinitions.get("MetricCard") != null
+    -> PASS
+[2] Direct property-schema validation (valid props, crm catalog):
+    PASS (no exception)
+[3] Direct property-schema validation (trend=spiral) - expect VALIDATION_FAILED:
+    VALIDATION_FAILED: Value 'spiral' is not a valid enum value (context={path=/trend})
+[4] Direct property-schema validation (missing required value) - expect VALIDATION_FAILED:
+    VALIDATION_FAILED: Missing required property 'value' (context={path=/})
+[5] Ref-schema via CRM catalog (catalog.json#/components/MetricCard) - expect PASS:
+    PASS (no exception)
+[6] Ref-schema via DEFAULT catalog (MetricCard not registered) - expect VALIDATION_FAILED:
+    VALIDATION_FAILED: Component 'MetricCard' not found in catalog for reference 'catalog.json#/components/MetricCard' (context={path=/})
+
+Note: A2uiCoreSchemaValidator is @RestrictTo(LIBRARY_GROUP_PREFIX) in a2ui-engine:
+runtime works (this probe), but it is not intended as public API; production
+CatalogValidator should wrap or re-implement it (see analysis.md, Block 4 plan).

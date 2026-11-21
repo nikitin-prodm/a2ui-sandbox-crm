@@ -1,0 +1,18 @@
+# Build/tooling artifacts
+**/build/
+**/bin/
+**/.gradle/
+**/.kotlin/
+android-sdk/
+tools/
+probe/jdk/
+probe/extract/
+probe/*.class
+probe/run-all.log
+probe/*.zip
+*.log
+*.iml
+.idea/
+.vscode/
+_reference/
+local.properties

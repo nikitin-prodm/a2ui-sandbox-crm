@@ -1,0 +1,52 @@
+=== A2UI Protocol Compatibility Probe ===
+artifact: androidx.a2ui:a2ui-model:1.0.0-alpha02 (classes.jar from AAR)
+
+CASE 1) v0.9.1 createSurface (valid per v0.9.1 schema)
+  input: {"version":"v0.9.1","createSurface":{"surfaceId":"s1","catalogId":"dev.a2uicrm:catalog"}}
+  result: PARSE_OK
+  detail: parsed -> A2uiCreateSurfaceMessage A2uiCreateSurfaceMessage(surfaceId=s1, catalogId=dev.a2uicrm:catalog, theme={}, shouldSendDataModel=false)
+  verdict: PASS (as expected)
+
+CASE 2) v0.9 createSurface (valid per v0.9.1 schema enum)
+  input: {"version":"v0.9","createSurface":{"surfaceId":"s2","catalogId":"dev.a2uicrm:catalog"}}
+  result: PARSE_OK
+  detail: parsed -> A2uiCreateSurfaceMessage A2uiCreateSurfaceMessage(surfaceId=s2, catalogId=dev.a2uicrm:catalog, theme={}, shouldSendDataModel=false)
+  verdict: PASS (as expected)
+
+CASE 3) v1.0 createSurface minimal (version const 1.0)
+  input: {"version":"1.0","createSurface":{"surfaceId":"s3"}}
+  result: VALIDATION_FAILED
+  detail: A2uiValidationException code=VALIDATION_FAILED message="Unsupported protocol version: 1.0. expected: [v0.9, v0.9.1]" context={path=/version}
+  verdict: PASS (as expected)
+
+CASE 4) v1.0 createSurface with inline components + dataModel (v1.0-only)
+  input: {"version":"1.0","createSurface":{"surfaceId":"s3","components":[{"id":"root","component":"Text","text":"Hello"}],"dataModel":{}}}
+  result: VALIDATION_FAILED
+  detail: A2uiValidationException code=VALIDATION_FAILED message="Unsupported protocol version: 1.0. expected: [v0.9, v0.9.1]" context={path=/version}
+  verdict: PASS (as expected)
+
+CASE 5) v0.9.1 updateComponents with component list
+  input: {"version":"v0.9.1","updateComponents":{"surfaceId":"s1","components":[{"id":"root","component":"Text","text":"Hi"},{"id":"c1","component":"Button","label":"OK"}]}}
+  result: PARSE_OK
+  detail: parsed -> A2uiUpdateComponentsMessage A2uiUpdateComponentsMessage(surfaceId=s1, components=[A2uiComponentPayload(id=root, type=Text, properties={text=Hi}), A2uiComponentPayload(id=c1, type=Button, properties={label=OK})])
+  verdict: PASS (as expected)
+
+CASE 6) missing version field in envelope
+  input: {"createSurface":{"surfaceId":"s4","catalogId":"dev.a2uicrm:catalog"}}
+  result: VALIDATION_FAILED
+  detail: A2uiValidationException code=VALIDATION_FAILED message="Missing or empty 'version' in message envelope" context={path=/version}
+  verdict: PASS (as expected)
+
+CASE 7) v0.8 deleteSurface (deprecated version string)
+  input: {"version":"v0.8","deleteSurface":{"surfaceId":"s1"}}
+  result: VALIDATION_FAILED
+  detail: A2uiValidationException code=VALIDATION_FAILED message="Unsupported protocol version: v0.8. expected: [v0.9, v0.9.1]" context={path=/version}
+  verdict: PASS (as expected)
+
+CASE 8) v1.0 callRendererFunction (v1.0-only message type)
+  input: {"version":"1.0","callRendererFunction":{"surfaceId":"s1","functionCallId":"fc1","callFunction":{"name":"formatString","catalogId":"basic"}}}
+  result: VALIDATION_FAILED
+  detail: A2uiValidationException code=VALIDATION_FAILED message="Unsupported protocol version: 1.0. expected: [v0.9, v0.9.1]" context={path=/version}
+  verdict: PASS (as expected)
+
+SUMMARY: 8 passed, 0 failed out of 8 cases.

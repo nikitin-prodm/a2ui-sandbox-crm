@@ -1,0 +1,1591 @@
+{
+  "catalogId": "dev.a2uicrm:crm-catalog",
+  "version": "1.0.0",
+  "protocolVersion": "0.9.1",
+  "$comment": [
+    "SOURCE OF TRUTH: this file declares exactly what the A2UI CRM renderer can render.",
+    "The A2UI protocol layer (androidx.a2ui:a2ui-model/a2ui-engine 1.0.0-alpha02) only accepts",
+    "envelope version strings 'v0.9' and 'v0.9.1' (verified by protocol compatibility probe, 8/8 PASS).",
+    "Spec 1.0 features (custom catalogs, two-way function calls, inline components) are NOT available.",
+    "spec_support: native = type exists in the A2UI v0.9.1 basic catalog (cited by line);",
+    "app_extension = type does not exist in 0.9.1, the app implements it in its own Compose renderer."
+  ],
+  "spec": {
+    "a2uiSpecVersion": "0.9.1",
+    "basicCatalog": "https://github.com/a2ui-project/a2ui/blob/main/specification/v0_9_1/catalogs/basic/catalog.json",
+    "commonTypes": "https://github.com/a2ui-project/a2ui/blob/main/specification/v0_9/json/common_types.json",
+    "envelope": {
+      "version": "v0.9.1",
+      "messageTypes": [
+        "createSurface",
+        "updateComponents",
+        "updateDataModel",
+        "deleteSurface"
+      ],
+      "notes": [
+        "version is REQUIRED in every message (probe case 6).",
+        "createSurface requires surfaceId AND catalogId; inline components/dataModel are 1.0-only and rejected.",
+        "Adjacency-list model: children are referenced by component id, never inlined (Row/Column children description, basic catalog lines 254, 300).",
+        "Data binding: literal values or {\"path\": \"<json-pointer>\"} (common_types.json DataBinding, lines 63-72)."
+      ]
+    }
+  },
+  "nativeComponents": {
+    "$comment": "Types from the A2UI v0.9.1 basic catalog; specLine = line number in specification/v0_9_1/catalogs/basic/catalog.json. rendererSupport: 'native' = implemented by our renderer in v1 (8 of 18: Text, Row, Column, Card, Divider, Button + Icon from 5.1 + List from 5.2); 'not_implemented_v1' = valid per spec but deferred (10: Image, Tabs, Modal, Video, AudioPlayer — not budgeted; TextField, CheckBox, ChoicePicker, Slider, DateTimeInput — input components deferred to v1.1) — the validator returns UNSUPPORTED_RENDERER_TYPE with a hint instead of rendering.",
+    "components": [
+      {
+        "name": "Text",
+        "spec_support": "native",
+        "specLine": 8,
+        "rendererSupport": "native",
+        "required": [
+          "component",
+          "text"
+        ],
+        "notes": "variant enum h1..h5/caption/body (line 30)"
+      },
+      {
+        "name": "Image",
+        "spec_support": "native",
+        "specLine": 39,
+        "rendererSupport": "not_implemented_v1",
+        "notes": "not budgeted in v1 (no images on role screens)"
+      },
+      {
+        "name": "Icon",
+        "spec_support": "native",
+        "specLine": 80,
+        "rendererSupport": "native",
+        "required": [
+          "component",
+          "name"
+        ],
+        "notes": "budgeted in 5.1: 5 icons from the spec enum"
+      },
+      {
+        "name": "Video",
+        "spec_support": "native",
+        "specLine": 183,
+        "rendererSupport": "not_implemented_v1",
+        "notes": "out of CRM scope in v1"
+      },
+      {
+        "name": "AudioPlayer",
+        "spec_support": "native",
+        "specLine": 208,
+        "rendererSupport": "not_implemented_v1",
+        "notes": "out of CRM scope in v1"
+      },
+      {
+        "name": "Row",
+        "spec_support": "native",
+        "specLine": 237,
+        "rendererSupport": "native",
+        "required": [
+          "component",
+          "children"
+        ],
+        "notes": "justify/align enums (lines 257-276)"
+      },
+      {
+        "name": "Column",
+        "spec_support": "native",
+        "specLine": 283,
+        "rendererSupport": "native",
+        "required": [
+          "component",
+          "children"
+        ],
+        "notes": "root of every screen tree"
+      },
+      {
+        "name": "List",
+        "spec_support": "native",
+        "specLine": 329,
+        "rendererSupport": "native",
+        "required": [
+          "component",
+          "children"
+        ],
+        "notes": "budgeted in 5.2 (ActionItem lists)"
+      },
+      {
+        "name": "Card",
+        "spec_support": "native",
+        "specLine": 366,
+        "rendererSupport": "native",
+        "required": [
+          "component",
+          "child"
+        ],
+        "notes": "single child by id (lines 381-386)"
+      },
+      {
+        "name": "Tabs",
+        "spec_support": "native",
+        "specLine": 391,
+        "rendererSupport": "not_implemented_v1",
+        "notes": "not budgeted in v1 (role screens use Column sections)"
+      },
+      {
+        "name": "Modal",
+        "spec_support": "native",
+        "specLine": 432,
+        "rendererSupport": "not_implemented_v1",
+        "notes": "not budgeted in v1"
+      },
+      {
+        "name": "Divider",
+        "spec_support": "native",
+        "specLine": 461,
+        "rendererSupport": "native",
+        "required": [
+          "component"
+        ]
+      },
+      {
+        "name": "Button",
+        "spec_support": "native",
+        "specLine": 488,
+        "rendererSupport": "native",
+        "required": [
+          "component",
+          "child",
+          "action"
+        ],
+        "notes": "variant default/primary/borderless (line 513)"
+      },
+      {
+        "name": "TextField",
+        "spec_support": "native",
+        "specLine": 525,
+        "rendererSupport": "not_implemented_v1",
+        "notes": "input components deferred to v1.1; agent must use dedicated flows"
+      },
+      {
+        "name": "CheckBox",
+        "spec_support": "native",
+        "specLine": 567,
+        "rendererSupport": "not_implemented_v1"
+      },
+      {
+        "name": "ChoicePicker",
+        "spec_support": "native",
+        "specLine": 599,
+        "rendererSupport": "not_implemented_v1"
+      },
+      {
+        "name": "Slider",
+        "spec_support": "native",
+        "specLine": 668,
+        "rendererSupport": "not_implemented_v1"
+      },
+      {
+        "name": "DateTimeInput",
+        "spec_support": "native",
+        "specLine": 709,
+        "rendererSupport": "not_implemented_v1"
+      }
+    ],
+    "functions": [
+      {
+        "name": "required",
+        "spec_support": "native",
+        "specLine": 805,
+        "rendererSupport": "not_implemented_v1",
+        "notes": "used by input components (deferred to v1.1)"
+      },
+      {
+        "name": "regex",
+        "spec_support": "native",
+        "specLine": 829,
+        "rendererSupport": "not_implemented_v1"
+      },
+      {
+        "name": "length",
+        "spec_support": "native",
+        "specLine": 857,
+        "rendererSupport": "not_implemented_v1"
+      },
+      {
+        "name": "numeric",
+        "spec_support": "native",
+        "specLine": 899,
+        "rendererSupport": "not_implemented_v1"
+      },
+      {
+        "name": "email",
+        "spec_support": "native",
+        "specLine": 939,
+        "rendererSupport": "not_implemented_v1"
+      },
+      {
+        "name": "formatString",
+        "spec_support": "native",
+        "specLine": 963,
+        "rendererSupport": "native"
+      },
+      {
+        "name": "formatNumber",
+        "spec_support": "native",
+        "specLine": 987,
+        "rendererSupport": "native"
+      },
+      {
+        "name": "formatCurrency",
+        "spec_support": "native",
+        "specLine": 1020,
+        "rendererSupport": "native",
+        "notes": "Opportunity amounts"
+      },
+      {
+        "name": "formatDate",
+        "spec_support": "native",
+        "specLine": 1057,
+        "rendererSupport": "native",
+        "notes": "dueAt / closeDate"
+      },
+      {
+        "name": "pluralize",
+        "spec_support": "native",
+        "specLine": 1086,
+        "rendererSupport": "native"
+      },
+      {
+        "name": "openUrl",
+        "spec_support": "native",
+        "specLine": 1135,
+        "rendererSupport": "not_implemented_v1",
+        "notes": "blocked: only whitelisted CRM actions allowed"
+      },
+      {
+        "name": "and",
+        "spec_support": "native",
+        "specLine": 1161,
+        "rendererSupport": "not_implemented_v1"
+      },
+      {
+        "name": "or",
+        "spec_support": "native",
+        "specLine": 1190,
+        "rendererSupport": "not_implemented_v1"
+      },
+      {
+        "name": "not",
+        "spec_support": "native",
+        "specLine": 1219,
+        "rendererSupport": "not_implemented_v1"
+      }
+    ]
+  },
+  "components": {
+    "MetricCard": {
+      "spec_support": "app_extension",
+      "description": "A single KPI tile: number + label + optional trend indicator.",
+      "schema": {
+        "label": {
+          "type": "DynamicString",
+          "required": true,
+          "maxLength": 40
+        },
+        "value": {
+          "type": "DynamicString|DynamicNumber",
+          "required": true,
+          "maxLength": 24
+        },
+        "trend": {
+          "type": "string",
+          "enum": [
+            "up",
+            "down",
+            "flat"
+          ],
+          "required": false
+        },
+        "trendLabel": {
+          "type": "DynamicString",
+          "required": false,
+          "maxLength": 24
+        },
+        "action": {
+          "type": "Action",
+          "required": false
+        },
+        "icon": {
+          "type": "string",
+          "enum": [
+            "add",
+            "check",
+            "checkCircle",
+            "close",
+            "calendarToday",
+            "error",
+            "warning",
+            "flag",
+            "filterAlt",
+            "description",
+            "emojiEvents",
+            "work",
+            "person",
+            "group",
+            "paid",
+            "attachMoney",
+            "trendingUp",
+            "trendingDown",
+            "schedule",
+            "event",
+            "phone",
+            "star",
+            "rocket",
+            "storefront",
+            "business",
+            "insights",
+            "sort",
+            "swapVert",
+            "email",
+            "leaderboard",
+            "task",
+            "refresh"
+          ],
+          "required": false,
+          "notes": "style-kit icon token shown next to the label"
+        }
+      },
+      "messageExample": {
+        "version": "v0.9.1",
+        "updateComponents": {
+          "surfaceId": "demo",
+          "components": [
+            {
+              "id": "root",
+              "component": "Column",
+              "children": [
+                "m1"
+              ]
+            },
+            {
+              "id": "m1",
+              "component": "MetricCard",
+              "label": "Overdue",
+              "value": {
+                "path": "/stats/overdueCount"
+              },
+              "trend": "up",
+              "trendLabel": "+2 vs yesterday"
+            }
+          ]
+        }
+      },
+      "validation": {
+        "rejects": [
+          "children/child props (leaf component)",
+          "trend outside enum",
+          "value bound to non-scalar path"
+        ],
+        "onError": {
+          "code": "VALIDATION_FAILED",
+          "message": "MetricCard.trend must be one of up|down|flat",
+          "reportToAgent": {
+            "error": "INVALID_PROPERTY_VALUE",
+            "path": "/updateComponents/components/{i}/trend",
+            "allowedValues": [
+              "up",
+              "down",
+              "flat"
+            ]
+          }
+        }
+      },
+      "constraints": [
+        "Cannot render charts or sparklines (use TrendChart).",
+        "Exactly one metric per card.",
+        "No images or custom colors; icon must be a token from the icon enum."
+      ]
+    },
+    "EntityCard": {
+      "spec_support": "app_extension",
+      "description": "A card for a CRM record (contact / company / opportunity / task) with whitelisted fields only.",
+      "schema": {
+        "entityType": {
+          "type": "string",
+          "enum": [
+            "contact",
+            "company",
+            "opportunity",
+            "task"
+          ],
+          "required": true
+        },
+        "entityId": {
+          "type": "string",
+          "required": true
+        },
+        "title": {
+          "type": "DynamicString",
+          "required": true,
+          "maxLength": 60
+        },
+        "subtitle": {
+          "type": "DynamicString",
+          "required": false,
+          "maxLength": 60
+        },
+        "badge": {
+          "type": "DynamicString",
+          "required": false,
+          "maxLength": 24
+        },
+        "amount": {
+          "type": "DynamicString",
+          "required": false
+        },
+        "footer": {
+          "type": "array",
+          "items": "DynamicString",
+          "required": false,
+          "maxItems": 3
+        },
+        "action": {
+          "type": "Action",
+          "required": false,
+          "default": {
+            "event": {
+              "name": "openEntity"
+            }
+          }
+        },
+        "icon": {
+          "type": "string",
+          "enum": [
+            "add",
+            "check",
+            "checkCircle",
+            "close",
+            "calendarToday",
+            "error",
+            "warning",
+            "flag",
+            "filterAlt",
+            "description",
+            "emojiEvents",
+            "work",
+            "person",
+            "group",
+            "paid",
+            "attachMoney",
+            "trendingUp",
+            "trendingDown",
+            "schedule",
+            "event",
+            "phone",
+            "star",
+            "rocket",
+            "storefront",
+            "business",
+            "insights",
+            "sort",
+            "swapVert",
+            "email",
+            "leaderboard",
+            "task",
+            "refresh"
+          ],
+          "required": false,
+          "notes": "style-kit icon token shown in the badge area"
+        }
+      },
+      "messageExample": {
+        "version": "v0.9.1",
+        "updateComponents": {
+          "surfaceId": "demo",
+          "components": [
+            {
+              "id": "root",
+              "component": "Column",
+              "children": [
+                "opp1"
+              ]
+            },
+            {
+              "id": "opp1",
+              "component": "EntityCard",
+              "entityType": "opportunity",
+              "entityId": "a1b2",
+              "title": "Acme renewal",
+              "subtitle": "Acme Corp",
+              "badge": "Proposal",
+              "amount": "$24,500"
+            }
+          ]
+        }
+      },
+      "validation": {
+        "rejects": [
+          "unknown entityType",
+          "inline children",
+          "HTML/markdown/raw content in any field",
+          "more than 3 footer items"
+        ],
+        "onError": {
+          "code": "VALIDATION_FAILED",
+          "message": "EntityCard.entityType must be one of contact|company|opportunity|task",
+          "reportToAgent": {
+            "error": "INVALID_PROPERTY_VALUE",
+            "path": "/updateComponents/components/{i}/entityType",
+            "allowedValues": [
+              "contact",
+              "company",
+              "opportunity",
+              "task"
+            ]
+          }
+        }
+      },
+      "constraints": [
+        "Fixed layout; agent cannot add arbitrary fields or child components.",
+        "Default tap action is openEntity; no other implicit behavior.",
+        "All display strings must be plain text."
+      ]
+    },
+    "ActionItem": {
+      "spec_support": "app_extension",
+      "description": "A task / follow-up row with checkbox, deadline and contact reference.",
+      "schema": {
+        "taskId": {
+          "type": "string",
+          "required": true
+        },
+        "title": {
+          "type": "DynamicString",
+          "required": true,
+          "maxLength": 80
+        },
+        "dueAt": {
+          "type": "DynamicString",
+          "required": true,
+          "format": "ISO-8601 date-time"
+        },
+        "completed": {
+          "type": "DynamicBoolean",
+          "required": true
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "low",
+            "normal",
+            "high"
+          ],
+          "required": false,
+          "default": "normal"
+        },
+        "contactName": {
+          "type": "DynamicString",
+          "required": false,
+          "maxLength": 60
+        },
+        "action": {
+          "type": "Action",
+          "required": false,
+          "default": {
+            "event": {
+              "name": "completeTask",
+              "context": {
+                "taskId": "<this taskId>"
+              }
+            }
+          }
+        },
+        "checkboxShape": {
+          "type": "string",
+          "enum": [
+            "square",
+            "round"
+          ],
+          "required": false,
+          "notes": "5.4i editable knob: round checkboxes"
+        }
+      },
+      "messageExample": {
+        "version": "v0.9.1",
+        "updateComponents": {
+          "surfaceId": "demo",
+          "components": [
+            {
+              "id": "root",
+              "component": "Column",
+              "children": [
+                "t1"
+              ]
+            },
+            {
+              "id": "t1",
+              "component": "ActionItem",
+              "taskId": "tt11",
+              "title": "Send proposal to Acme",
+              "dueAt": "2026-11-13T17:00:00Z",
+              "completed": false,
+              "priority": "high",
+              "contactName": "John Doe"
+            }
+          ]
+        }
+      },
+      "validation": {
+        "rejects": [
+          "dueAt not parseable as ISO-8601",
+          "missing taskId",
+          "embedded input fields"
+        ],
+        "onError": {
+          "code": "VALIDATION_FAILED",
+          "message": "ActionItem.dueAt must be an ISO-8601 date-time string",
+          "reportToAgent": {
+            "error": "INVALID_PROPERTY_VALUE",
+            "path": "/updateComponents/components/{i}/dueAt",
+            "expected": "ISO-8601 date-time"
+          }
+        }
+      },
+      "constraints": [
+        "Checkbox maps to completeTask -> CRMRepository.updateTask(completed=true); agent cannot define custom checkbox behavior.",
+        "One task per item; a task list is a native Column/List of ActionItems."
+      ]
+    },
+    "PipelineStrip": {
+      "spec_support": "app_extension",
+      "description": "A horizontal strip of pipeline stages with counts (funnel summary).",
+      "schema": {
+        "stages": {
+          "type": "array",
+          "required": true,
+          "minItems": 2,
+          "maxItems": 8,
+          "items": {
+            "name": "string, max 24",
+            "count": "integer >= 0",
+            "amount": "string, optional",
+            "highlight": "boolean, optional",
+            "icon": "icon token (same enum as SectionHeader.icon), optional — a distinct meaningful icon per stage"
+          }
+        },
+        "selectedStage": {
+          "type": "string",
+          "required": false
+        },
+        "action": {
+          "type": "Action",
+          "required": false,
+          "default": {
+            "event": {
+              "name": "filterStage"
+            }
+          }
+        }
+      },
+      "messageExample": {
+        "version": "v0.9.1",
+        "updateComponents": {
+          "surfaceId": "demo",
+          "components": [
+            {
+              "id": "root",
+              "component": "Column",
+              "children": [
+                "pipe1"
+              ]
+            },
+            {
+              "id": "pipe1",
+              "component": "PipelineStrip",
+              "stages": [
+                {
+                  "name": "Lead",
+                  "count": 12
+                },
+                {
+                  "name": "Proposal",
+                  "count": 5,
+                  "highlight": true
+                },
+                {
+                  "name": "Won",
+                  "count": 9
+                }
+              ],
+              "selectedStage": "Proposal"
+            }
+          ]
+        }
+      },
+      "validation": {
+        "rejects": [
+          "fewer than 2 or more than 8 stages",
+          "negative or non-integer count",
+          "duplicate stage names"
+        ],
+        "onError": {
+          "code": "VALIDATION_FAILED",
+          "message": "PipelineStrip.stages[3].count must be an integer >= 0",
+          "reportToAgent": {
+            "error": "INVALID_PROPERTY_VALUE",
+            "path": "/updateComponents/components/{i}/stages/3/count",
+            "expected": "integer >= 0"
+          }
+        }
+      },
+      "constraints": [
+        "Horizontal stage strip only; cannot become a pie/donut/radial chart.",
+        "Stage colors are fixed design tokens; no custom colors.",
+        "Stage order is the array order; counts must come from the data model."
+      ]
+    },
+    "TrendChart": {
+      "spec_support": "app_extension",
+      "description": "A compact single-series bar or line chart. Value labels are drawn on the chart by default (showValues).",
+      "schema": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "bar",
+            "line"
+          ],
+          "required": true
+        },
+        "points": {
+          "type": "array",
+          "items": "number",
+          "required": true,
+          "minItems": 3,
+          "maxItems": 24
+        },
+        "labels": {
+          "type": "array",
+          "items": "string",
+          "required": true,
+          "sameLengthAs": "points",
+          "itemMaxLength": 12
+        },
+        "unit": {
+          "type": "string",
+          "required": false,
+          "maxLength": 8
+        },
+        "caption": {
+          "type": "DynamicString",
+          "required": false,
+          "maxLength": 80
+        },
+        "showValues": {
+          "type": "boolean",
+          "required": false,
+          "default": true,
+          "notes": "5.5: numbers are drawn above the bars/points (compact format)"
+        }
+      },
+      "messageExample": {
+        "version": "v0.9.1",
+        "updateComponents": {
+          "surfaceId": "demo",
+          "components": [
+            {
+              "id": "root",
+              "component": "Column",
+              "children": [
+                "tr1"
+              ]
+            },
+            {
+              "id": "tr1",
+              "component": "TrendChart",
+              "kind": "bar",
+              "points": [
+                3,
+                5,
+                4,
+                7,
+                6
+              ],
+              "labels": [
+                "Mon",
+                "Tue",
+                "Wed",
+                "Thu",
+                "Fri"
+              ],
+              "unit": "deals"
+            }
+          ]
+        }
+      },
+      "validation": {
+        "rejects": [
+          "kind outside enum (pie/donut/radar/area are not available)",
+          "labels/points length mismatch",
+          "non-numeric points",
+          "more than one series"
+        ],
+        "onError": {
+          "code": "VALIDATION_FAILED",
+          "message": "TrendChart.kind must be bar|line (no PieChart in this catalog)",
+          "reportToAgent": {
+            "error": "INVALID_PROPERTY_VALUE",
+            "path": "/updateComponents/components/{i}/kind",
+            "allowedValues": [
+              "bar",
+              "line"
+            ],
+            "hint": "No PieChart in this catalog; use PipelineStrip for stage shares or TrendChart for time series"
+          }
+        }
+      },
+      "constraints": [
+        "Single series only; no dual axes; no annotations.",
+        "Cannot be nested inside EntityCard."
+      ]
+    },
+    "LeaderboardRow": {
+      "spec_support": "app_extension",
+      "description": "One row of a team ranking: rank, member, single metric, optional delta.",
+      "schema": {
+        "rank": {
+          "type": "integer",
+          "required": true,
+          "minimum": 1
+        },
+        "memberId": {
+          "type": "string",
+          "required": true
+        },
+        "memberName": {
+          "type": "DynamicString",
+          "required": true,
+          "maxLength": 40
+        },
+        "metricLabel": {
+          "type": "DynamicString",
+          "required": false,
+          "maxLength": 24
+        },
+        "metricValue": {
+          "type": "DynamicString",
+          "required": true,
+          "maxLength": 16
+        },
+        "delta": {
+          "type": "DynamicString",
+          "required": false,
+          "maxLength": 16,
+          "notes": "signed, pre-formatted, e.g. +12%"
+        },
+        "action": {
+          "type": "Action",
+          "required": false,
+          "default": {
+            "event": {
+              "name": "openEntity",
+              "context": {
+                "entityType": "contact"
+              }
+            }
+          }
+        },
+        "icon": {
+          "type": "string",
+          "enum": [
+            "add",
+            "check",
+            "checkCircle",
+            "close",
+            "calendarToday",
+            "error",
+            "warning",
+            "flag",
+            "filterAlt",
+            "description",
+            "emojiEvents",
+            "work",
+            "person",
+            "group",
+            "paid",
+            "attachMoney",
+            "trendingUp",
+            "trendingDown",
+            "schedule",
+            "event",
+            "phone",
+            "star",
+            "rocket",
+            "storefront",
+            "business",
+            "insights",
+            "sort",
+            "swapVert",
+            "email",
+            "leaderboard",
+            "task",
+            "refresh"
+          ],
+          "required": false,
+          "notes": "style-kit icon token replaces the rank bubble when present"
+        }
+      },
+      "messageExample": {
+        "version": "v0.9.1",
+        "updateComponents": {
+          "surfaceId": "demo",
+          "components": [
+            {
+              "id": "root",
+              "component": "Column",
+              "children": [
+                "lb1"
+              ]
+            },
+            {
+              "id": "lb1",
+              "component": "LeaderboardRow",
+              "rank": 1,
+              "memberId": "wm-1",
+              "memberName": "Jane Cooper",
+              "metricLabel": "Won",
+              "metricValue": "$41.2k",
+              "delta": "+8%"
+            }
+          ]
+        }
+      },
+      "validation": {
+        "rejects": [
+          "rank < 1",
+          "extra per-member data (no PII beyond name + metric)",
+          "more than one metric per row"
+        ],
+        "onError": {
+          "code": "VALIDATION_FAILED",
+          "message": "LeaderboardRow.rank must be an integer >= 1",
+          "reportToAgent": {
+            "error": "INVALID_PROPERTY_VALUE",
+            "path": "/updateComponents/components/{i}/rank",
+            "expected": "integer >= 1"
+          }
+        }
+      },
+      "constraints": [
+        "Single metric per row; multi-metric tables require multiple LeaderboardRows with the same metricLabel.",
+        "No avatars in v1 (avoid PII); no custom row styling."
+      ]
+    },
+    "AlertBanner": {
+      "spec_support": "app_extension",
+      "description": "A risk / warning banner with fixed severity styling.",
+      "schema": {
+        "severity": {
+          "type": "string",
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ],
+          "required": true
+        },
+        "title": {
+          "type": "DynamicString",
+          "required": true,
+          "maxLength": 60
+        },
+        "message": {
+          "type": "DynamicString",
+          "required": false,
+          "maxLength": 120
+        },
+        "actionLabel": {
+          "type": "DynamicString",
+          "required": false,
+          "maxLength": 24
+        },
+        "action": {
+          "type": "Action",
+          "required": false
+        }
+      },
+      "messageExample": {
+        "version": "v0.9.1",
+        "updateComponents": {
+          "surfaceId": "demo",
+          "components": [
+            {
+              "id": "root",
+              "component": "Column",
+              "children": [
+                "al1"
+              ]
+            },
+            {
+              "id": "al1",
+              "component": "AlertBanner",
+              "severity": "warning",
+              "title": "3 deals stuck in Proposal",
+              "message": "No activity for 14+ days",
+              "actionLabel": "Review"
+            }
+          ]
+        }
+      },
+      "validation": {
+        "rejects": [
+          "severity outside enum",
+          "more than 3 AlertBanners per surface",
+          "custom colors or icons"
+        ],
+        "onError": {
+          "code": "VALIDATION_FAILED",
+          "message": "AlertBanner.severity must be one of info|warning|error",
+          "reportToAgent": {
+            "error": "INVALID_PROPERTY_VALUE",
+            "path": "/updateComponents/components/{i}/severity",
+            "allowedValues": [
+              "info",
+              "warning",
+              "error"
+            ]
+          }
+        }
+      },
+      "constraints": [
+        "No auto-dismiss; dismissal is an explicit user action.",
+        "Severity determines color; agent cannot override styling."
+      ]
+    },
+    "SectionHeader": {
+      "spec_support": "app_extension",
+      "description": "Section title with optional count badge and optional trailing CTA.",
+      "schema": {
+        "title": {
+          "type": "DynamicString",
+          "required": true,
+          "maxLength": 40
+        },
+        "count": {
+          "type": "integer",
+          "required": false,
+          "minimum": 0
+        },
+        "countTone": {
+          "type": "string",
+          "enum": [
+            "default",
+            "warning",
+            "error"
+          ],
+          "required": false,
+          "default": "default"
+        },
+        "ctaLabel": {
+          "type": "DynamicString",
+          "required": false,
+          "maxLength": 24
+        },
+        "action": {
+          "type": "Action",
+          "required": false
+        },
+        "icon": {
+          "type": "string",
+          "enum": [
+            "add",
+            "check",
+            "checkCircle",
+            "close",
+            "calendarToday",
+            "error",
+            "warning",
+            "flag",
+            "filterAlt",
+            "description",
+            "emojiEvents",
+            "work",
+            "person",
+            "group",
+            "paid",
+            "attachMoney",
+            "trendingUp",
+            "trendingDown",
+            "schedule",
+            "event",
+            "phone",
+            "star",
+            "rocket",
+            "storefront",
+            "business",
+            "insights",
+            "sort",
+            "swapVert",
+            "email",
+            "leaderboard",
+            "task",
+            "refresh"
+          ],
+          "required": false,
+          "notes": "style-kit icon token shown before the title"
+        }
+      },
+      "messageExample": {
+        "version": "v0.9.1",
+        "updateComponents": {
+          "surfaceId": "demo",
+          "components": [
+            {
+              "id": "root",
+              "component": "Column",
+              "children": [
+                "sh1"
+              ]
+            },
+            {
+              "id": "sh1",
+              "component": "SectionHeader",
+              "title": "Overdue",
+              "count": 2,
+              "countTone": "error"
+            }
+          ]
+        }
+      },
+      "validation": {
+        "rejects": [
+          "children/child props",
+          "ctaLabel without a whitelisted action",
+          "count < 0"
+        ],
+        "onError": {
+          "code": "VALIDATION_FAILED",
+          "message": "SectionHeader.ctaLabel requires an action from the whitelist",
+          "reportToAgent": {
+            "error": "MISSING_REQUIRED_PROPERTY",
+            "path": "/updateComponents/components/{i}/action",
+            "reason": "ctaLabel requires action"
+          }
+        }
+      },
+      "constraints": [
+        "Cannot contain lists or data; it is a leaf.",
+        "One CTA maximum."
+      ]
+    },
+    "EmptyState": {
+      "spec_support": "app_extension",
+      "description": "Placeholder for empty data sets, with optional action. Also the user-facing fallback when an agent response fails validation.",
+      "schema": {
+        "title": {
+          "type": "DynamicString",
+          "required": true,
+          "maxLength": 60
+        },
+        "message": {
+          "type": "DynamicString",
+          "required": true,
+          "maxLength": 160
+        },
+        "icon": {
+          "type": "string",
+          "enum": [
+            "add",
+            "check",
+            "checkCircle",
+            "close",
+            "calendarToday",
+            "error",
+            "warning",
+            "flag",
+            "filterAlt",
+            "description",
+            "emojiEvents",
+            "work",
+            "person",
+            "group",
+            "paid",
+            "attachMoney",
+            "trendingUp",
+            "trendingDown",
+            "schedule",
+            "event",
+            "phone",
+            "star",
+            "rocket",
+            "storefront",
+            "business",
+            "insights",
+            "sort",
+            "swapVert",
+            "email",
+            "leaderboard",
+            "task",
+            "refresh"
+          ],
+          "required": false
+        },
+        "actionLabel": {
+          "type": "DynamicString",
+          "required": false,
+          "maxLength": 24
+        },
+        "action": {
+          "type": "Action",
+          "required": false
+        }
+      },
+      "messageExample": {
+        "version": "v0.9.1",
+        "updateComponents": {
+          "surfaceId": "demo",
+          "components": [
+            {
+              "id": "root",
+              "component": "Column",
+              "children": [
+                "es1"
+              ]
+            },
+            {
+              "id": "es1",
+              "component": "EmptyState",
+              "title": "No overdue tasks",
+              "message": "You are all caught up.",
+              "icon": "task"
+            }
+          ]
+        }
+      },
+      "validation": {
+        "rejects": [
+          "icon outside enum",
+          "images instead of the fixed icon set",
+          "nested inside Modal"
+        ],
+        "onError": {
+          "code": "VALIDATION_FAILED",
+          "message": "EmptyState.icon must be one of task|contact|deal|chart|team",
+          "reportToAgent": {
+            "error": "INVALID_PROPERTY_VALUE",
+            "path": "/updateComponents/components/{i}/icon",
+            "allowedValues": [
+              "add",
+              "check",
+              "checkCircle",
+              "close",
+              "calendarToday",
+              "error",
+              "warning",
+              "flag",
+              "filterAlt",
+              "description",
+              "emojiEvents",
+              "work",
+              "person",
+              "group",
+              "paid",
+              "attachMoney",
+              "trendingUp",
+              "trendingDown",
+              "schedule",
+              "event",
+              "phone",
+              "star",
+              "rocket",
+              "storefront",
+              "business",
+              "insights",
+              "sort",
+              "swapVert",
+              "email",
+              "leaderboard",
+              "task",
+              "refresh"
+            ]
+          }
+        }
+      },
+      "constraints": [
+        "Fixed icon set only.",
+        "Used by the renderer itself as validation fallback with a non-agent-generated message."
+      ]
+    },
+    "PrimaryActionButton": {
+      "spec_support": "app_extension",
+      "description": "The main call-to-action of a screen; a CRM-flavored Button with a strictly whitelisted action.",
+      "schema": {
+        "label": {
+          "type": "DynamicString",
+          "required": true,
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "action": {
+          "type": "Action",
+          "required": true,
+          "fromWhitelist": "actions"
+        },
+        "variant": {
+          "type": "string",
+          "enum": [
+            "primary",
+            "default",
+            "borderless"
+          ],
+          "required": false,
+          "default": "primary"
+        },
+        "icon": {
+          "type": "string",
+          "enum": [
+            "add",
+            "check",
+            "refresh"
+          ],
+          "required": false
+        }
+      },
+      "messageExample": {
+        "version": "v0.9.1",
+        "updateComponents": {
+          "surfaceId": "demo",
+          "components": [
+            {
+              "id": "root",
+              "component": "Column",
+              "children": [
+                "cta1"
+              ]
+            },
+            {
+              "id": "cta1",
+              "component": "PrimaryActionButton",
+              "label": "New task",
+              "icon": "add",
+              "action": {
+                "event": {
+                  "name": "createTask",
+                  "context": {
+                    "title": "Follow up",
+                    "dueAt": "2026-11-14T09:00:00Z"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "validation": {
+        "rejects": [
+          "action name outside the whitelist",
+          "functionCall actions",
+          "multiple actions"
+        ],
+        "onError": {
+          "code": "VALIDATION_FAILED",
+          "message": "PrimaryActionButton.action.event.name is not in the action whitelist",
+          "reportToAgent": {
+            "error": "ACTION_NOT_ALLOWED",
+            "path": "/updateComponents/components/{i}/action/event/name",
+            "hint": "sendEmail / openUrl / arbitrary code execution are not available"
+          }
+        }
+      },
+      "constraints": [
+        "Exactly one whitelisted action; no arbitrary callbacks.",
+        "Cannot open arbitrary URLs (openUrl is blocked in this catalog version).",
+        "Differs from native Button (basic catalog line 488) by the action whitelist enforced before rendering."
+      ]
+    }
+  },
+  "nestingRules": [
+    {
+      "parent": "EntityCard",
+      "forbiddenChildren": [
+        "TrendChart",
+        "AlertBanner"
+      ]
+    }
+  ],
+  "rendererSemantics": {
+    "$comment": "Renderer-side conventions: NOT part of the A2UI 0.9.1 protocol; implemented by our Compose renderer + CatalogValidator. Declared here so the agent-facing contract and the renderer stay in sync.",
+    "defaultActions": {
+      "rule": "If a component omits 'action', the renderer injects the default action with context taken from the component's own props.",
+      "examples": [
+        "ActionItem without action -> event completeTask with context.taskId = props.taskId",
+        "EntityCard without action -> event openEntity with context.entityType = props.entityType, context.entityId = props.entityId",
+        "PipelineStrip without action -> event filterStage with context.stage = props.selectedStage"
+      ]
+    },
+    "placeholders": {
+      "rule": "The string '<this X>' inside an action context value is replaced at render time with the value of props[X] of the component that owns the action. This is a renderer convention; the A2UI protocol does not define it.",
+      "example": "ActionItem action {\"event\":{\"name\":\"completeTask\",\"context\":{\"taskId\":\"<this taskId>\"}}} -> context.taskId resolved from props.taskId before dispatch"
+    },
+    "nestingConstraints": {
+      "rule": "Component nesting constraints are enforced by the CatalogValidator BEFORE rendering, not by the UI.",
+      "constraints": [
+        {
+          "forbidden": "TrendChart inside EntityCard (EntityCard is a leaf with fixed layout)"
+        },
+        {
+          "forbidden": "AlertBanner inside EntityCard"
+        }
+      ],
+      "how": "Tree traversal from root: walk updateComponents.components from the component with id 'root' following children ids (adjacency-list), maintaining a stack of ancestor types; for each component check nestingConstraints; violation -> error NESTING_NOT_ALLOWED with path /updateComponents/components/<id>/component and the parent chain in context."
+    }
+  },
+  "actions": {
+    "$comment": "Whitelist of event names the renderer may dispatch; each maps to a CRMRepository method or navigation. The agent cannot invent actions.",
+    "navigate": {
+      "context": {
+        "route": "enum: home|pipeline|settings"
+      }
+    },
+    "openEntity": {
+      "context": {
+        "entityType": "enum: contact|company|opportunity|task",
+        "entityId": "string"
+      }
+    },
+    "createTask": {
+      "context": {
+        "title": "string",
+        "dueAt": "ISO-8601 optional",
+        "contactId": "string optional"
+      },
+      "repositoryMapping": "CRMRepository.createTask (crm_repository.dart:65)"
+    },
+    "completeTask": {
+      "context": {
+        "taskId": "string"
+      },
+      "repositoryMapping": "CRMRepository.updateTask(completed=true) (crm_repository.dart:72)"
+    },
+    "updateOpportunityStage": {
+      "context": {
+        "opportunityId": "string",
+        "stage": "string"
+      },
+      "repositoryMapping": "extension: updateOpportunityStage (Domain Extension Spec)"
+    },
+    "createNote": {
+      "context": {
+        "contactId": "string",
+        "body": "string"
+      },
+      "repositoryMapping": "CRMRepository.createNote (crm_repository.dart:55)"
+    },
+    "triggerWorkflow": {
+      "context": {
+        "workflowId": "string",
+        "recordId": "string"
+      },
+      "repositoryMapping": "CRMRepository.triggerWorkflow (crm_repository.dart:87)"
+    },
+    "refreshSurface": {
+      "context": {
+        "surfaceId": "string"
+      }
+    },
+    "filterStage": {
+      "context": {
+        "stage": "string"
+      },
+      "notes": "local: updates data model selection, no repository call"
+    }
+  },
+  "validationErrors": {
+    "$comment": "Structured errors reported back to the agent so it can self-correct (mirrors A2uiException: code + message + context.path).",
+    "envelope": {
+      "code": "VALIDATION_FAILED",
+      "fields": [
+        "message",
+        "context.path",
+        "context.error",
+        "context.allowedValues",
+        "context.hint"
+      ]
+    },
+    "errors": {
+      "UNKNOWN_COMPONENT": {
+        "trigger": "component name not in nativeComponents nor components",
+        "report": {
+          "allowedValues": "all catalog type names"
+        }
+      },
+      "MISSING_REQUIRED_PROPERTY": {
+        "trigger": "required property absent",
+        "report": {
+          "property": "name"
+        }
+      },
+      "INVALID_PROPERTY_VALUE": {
+        "trigger": "value outside enum / range / format",
+        "report": {
+          "allowedValues": "enum",
+          "expected": "type or format"
+        }
+      },
+      "PROPERTY_NOT_ALLOWED": {
+        "trigger": "property not declared in the component schema (unevaluatedProperties:false semantics)"
+      },
+      "ACTION_NOT_ALLOWED": {
+        "trigger": "action name outside whitelist or functionCall used",
+        "report": {
+          "allowedValues": "actions"
+        }
+      },
+      "UNSUPPORTED_RENDERER_TYPE": {
+        "trigger": "type is valid per the 0.9.1 basic catalog but marked not_implemented_v1 in this renderer (Image, Tabs, Modal, Video, AudioPlayer, TextField, CheckBox, ChoicePicker, Slider, DateTimeInput)",
+        "report": {
+          "hint": "This component type is deferred; use the budgeted catalog types (see rendererSupport) or a dedicated flow instead"
+        },
+        "distinction": "different from UNKNOWN_COMPONENT: the type exists in the spec but this renderer cannot draw it yet"
+      },
+      "NESTING_NOT_ALLOWED": {
+        "trigger": "a component appears inside a forbidden parent (see top-level nestingRules)",
+        "report": {
+          "path": "/updateComponents/components/<id>/component",
+          "ancestors": "the parent type chain from root"
+        }
+      },
+      "LENGTH_LIMIT_EXCEEDED": {
+        "trigger": "array length or string maxLength exceeded"
+      }
+    },
+    "feedbackLoop": {
+      "maxRetries": 2,
+      "onExhausted": "render EmptyState with plain-language message + suggestion; keep previous valid surface if any"
+    }
+  },
+  "dataModelPaths": {
+    "$comment": "Convention for updateDataModel payloads per role screen (values always come from CRMRepository, never hardcoded by the agent).",
+    "managerHome": [
+      "/stats/overdueCount",
+      "/stats/overdueTrend",
+      "/stats/doneToday",
+      "/tasks/overdue",
+      "/tasks/today",
+      "/tasks/tomorrow",
+      "/contacts/recent"
+    ],
+    "headHome": [
+      "/team/leaderboard",
+      "/pipeline/stages",
+      "/stats/teamPipelineValue",
+      "/stats/teamWinRate",
+      "/stats/teamOverdueTasks",
+      "/alerts",
+      "/week/points"
+    ],
+    "pipeline": [
+      "/pipeline/stages",
+      "/opportunities/byStage",
+      "/stats/funnelTotals"
+    ],
+    "detail": [
+      "/entity/*"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+=== A2UI Catalog Round-Trip Probe ===
+catalog: D:\Projects\A2UI_CRM\probe\..\catalog\catalog.json
+parser:  androidx.a2ui:a2ui-model:1.0.0-alpha02 (A2uiJsonMessageParser)
+
+ROUNDTRIP MetricCard
+  input: {"version":"v0.9.1","updateComponents":{"surfaceId":"demo","components":[{"id":"root","component":"Column","children":["m1"]},{"id":"m1","component":"MetricCard","label":"Overdue","value":{"path":"/stats/overdueCount"},"trend":"up","trendLabel":"+2 vs yesterday"}]}}
+  result: PARSE_OK -> A2uiUpdateComponentsMessage A2uiUpdateComponentsMessage(surfaceId=demo, components=[A2uiComponentPayload(id=root, type=Column, properties={children=[m1]}), A2uiComponentPayload(id=m1, type=MetricCard, properties={label=Overdue, value={path=/stats/overdueCount}, trend=up, trendLabel=+2 vs yesterday})])
+
+ROUNDTRIP EntityCard
+  input: {"version":"v0.9.1","updateComponents":{"surfaceId":"demo","components":[{"id":"root","component":"Column","children":["opp1"]},{"id":"opp1","component":"EntityCard","entityType":"opportunity","entityId":"a1b2","title":"Acme renewal","subtitle":"Acme Corp","badge":"Proposal","amount":"$24,500"}]}}
+  result: PARSE_OK -> A2uiUpdateComponentsMessage A2uiUpdateComponentsMessage(surfaceId=demo, components=[A2uiComponentPayload(id=root, type=Column, properties={children=[opp1]}), A2uiComponentPayload(id=opp1, type=EntityCard, properties={entityType=opportunity, entityId=a1b2, title=Acme renewal, subtitle=Acme Corp, badge=Proposal, amount=$24,500})])
+
+ROUNDTRIP ActionItem
+  input: {"version":"v0.9.1","updateComponents":{"surfaceId":"demo","components":[{"id":"root","component":"Column","children":["t1"]},{"id":"t1","component":"ActionItem","taskId":"tt11","title":"Send proposal to Acme","dueAt":"2026-11-13T17:00:00Z","completed":false,"priority":"high","contactName":"John Doe"}]}}
+  result: PARSE_OK -> A2uiUpdateComponentsMessage A2uiUpdateComponentsMessage(surfaceId=demo, components=[A2uiComponentPayload(id=root, type=Column, properties={children=[t1]}), A2uiComponentPayload(id=t1, type=ActionItem, properties={taskId=tt11, title=Send proposal to Acme, dueAt=2026-11-13T17:00:00Z, completed=false, priority=high, contactName=John Doe})])
+
+ROUNDTRIP PipelineStrip
+  input: {"version":"v0.9.1","updateComponents":{"surfaceId":"demo","components":[{"id":"root","component":"Column","children":["pipe1"]},{"id":"pipe1","component":"PipelineStrip","stages":[{"name":"Lead","count":12},{"name":"Proposal","count":5,"highlight":true},{"name":"Won","count":9}],"selectedStage":"Proposal"}]}}
+  result: PARSE_OK -> A2uiUpdateComponentsMessage A2uiUpdateComponentsMessage(surfaceId=demo, components=[A2uiComponentPayload(id=root, type=Column, properties={children=[pipe1]}), A2uiComponentPayload(id=pipe1, type=PipelineStrip, properties={stages=[{name=Lead, count=12}, {name=Proposal, count=5, highlight=true}, {name=Won, count=9}], selectedStage=Proposal})])
+
+ROUNDTRIP TrendChart
+  input: {"version":"v0.9.1","updateComponents":{"surfaceId":"demo","components":[{"id":"root","component":"Column","children":["tr1"]},{"id":"tr1","component":"TrendChart","kind":"bar","points":[3,5,4,7,6],"labels":["Mon","Tue","Wed","Thu","Fri"],"unit":"deals"}]}}
+  result: PARSE_OK -> A2uiUpdateComponentsMessage A2uiUpdateComponentsMessage(surfaceId=demo, components=[A2uiComponentPayload(id=root, type=Column, properties={children=[tr1]}), A2uiComponentPayload(id=tr1, type=TrendChart, properties={kind=bar, points=[3, 5, 4, 7, 6], labels=[Mon, Tue, Wed, Thu, Fri], unit=deals})])
+
+ROUNDTRIP LeaderboardRow
+  input: {"version":"v0.9.1","updateComponents":{"surfaceId":"demo","components":[{"id":"root","component":"Column","children":["lb1"]},{"id":"lb1","component":"LeaderboardRow","rank":1,"memberId":"wm-1","memberName":"Jane Cooper","metricLabel":"Won","metricValue":"$41.2k","delta":"+8%"}]}}
+  result: PARSE_OK -> A2uiUpdateComponentsMessage A2uiUpdateComponentsMessage(surfaceId=demo, components=[A2uiComponentPayload(id=root, type=Column, properties={children=[lb1]}), A2uiComponentPayload(id=lb1, type=LeaderboardRow, properties={rank=1, memberId=wm-1, memberName=Jane Cooper, metricLabel=Won, metricValue=$41.2k, delta=+8%})])
+
+ROUNDTRIP AlertBanner
+  input: {"version":"v0.9.1","updateComponents":{"surfaceId":"demo","components":[{"id":"root","component":"Column","children":["al1"]},{"id":"al1","component":"AlertBanner","severity":"warning","title":"3 deals stuck in Proposal","message":"No activity for 14+ days","actionLabel":"Review"}]}}
+  result: PARSE_OK -> A2uiUpdateComponentsMessage A2uiUpdateComponentsMessage(surfaceId=demo, components=[A2uiComponentPayload(id=root, type=Column, properties={children=[al1]}), A2uiComponentPayload(id=al1, type=AlertBanner, properties={severity=warning, title=3 deals stuck in Proposal, message=No activity for 14+ days, actionLabel=Review})])
+
+ROUNDTRIP SectionHeader
+  input: {"version":"v0.9.1","updateComponents":{"surfaceId":"demo","components":[{"id":"root","component":"Column","children":["sh1"]},{"id":"sh1","component":"SectionHeader","title":"Overdue","count":2,"countTone":"error"}]}}
+  result: PARSE_OK -> A2uiUpdateComponentsMessage A2uiUpdateComponentsMessage(surfaceId=demo, components=[A2uiComponentPayload(id=root, type=Column, properties={children=[sh1]}), A2uiComponentPayload(id=sh1, type=SectionHeader, properties={title=Overdue, count=2, countTone=error})])
+
+ROUNDTRIP EmptyState
+  input: {"version":"v0.9.1","updateComponents":{"surfaceId":"demo","components":[{"id":"root","component":"Column","children":["es1"]},{"id":"es1","component":"EmptyState","title":"No overdue tasks","message":"You are all caught up.","icon":"task"}]}}
+  result: PARSE_OK -> A2uiUpdateComponentsMessage A2uiUpdateComponentsMessage(surfaceId=demo, components=[A2uiComponentPayload(id=root, type=Column, properties={children=[es1]}), A2uiComponentPayload(id=es1, type=EmptyState, properties={title=No overdue tasks, message=You are all caught up., icon=task})])
+
+ROUNDTRIP PrimaryActionButton
+  input: {"version":"v0.9.1","updateComponents":{"surfaceId":"demo","components":[{"id":"root","component":"Column","children":["cta1"]},{"id":"cta1","component":"PrimaryActionButton","label":"New task","icon":"add","action":{"event":{"name":"createTask","context":{"title":"Follow up","dueAt":"2026-11-14T09:00:00Z"}}}}]}}
+  result: PARSE_OK -> A2uiUpdateComponentsMessage A2uiUpdateComponentsMessage(surfaceId=demo, components=[A2uiComponentPayload(id=root, type=Column, properties={children=[cta1]}), A2uiComponentPayload(id=cta1, type=PrimaryActionButton, properties={label=New task, icon=add, action={event={name=createTask, context={title=Follow up, dueAt=2026-11-14T09:00:00Z}}}})])
+
+SUMMARY: 10 passed, 0 failed.

@@ -1,0 +1,23 @@
+=== MVP CatalogValidator Probe (required + enum + rendererSupport + nesting) ===
+catalog: D:\Projects\A2UI_CRM\probe\..\catalog\catalog.json
+
+VALIDATE MetricCard: PASS (0 errors)
+VALIDATE EntityCard: PASS (0 errors)
+VALIDATE ActionItem: PASS (0 errors)
+VALIDATE PipelineStrip: PASS (0 errors)
+VALIDATE TrendChart: PASS (0 errors)
+VALIDATE LeaderboardRow: PASS (0 errors)
+VALIDATE AlertBanner: PASS (0 errors)
+VALIDATE SectionHeader: PASS (0 errors)
+VALIDATE EmptyState: PASS (0 errors)
+VALIDATE PrimaryActionButton: PASS (0 errors)
+
+--- negative controls (must FAIL with structured errors) ---
+NEGATIVE 1 (MetricCard.trend='spiral'): [INVALID_PROPERTY_VALUE: MetricCard.trend='spiral' not in enum ["up","down","flat"] (path=/components/MetricCard/trend)]
+NEGATIVE 2 (MetricCard without required 'value'): [MISSING_REQUIRED_PROPERTY: MetricCard.value (path=/components/MetricCard/value)]
+NEGATIVE 3 (TextField, deferred to v1.1): [UNSUPPORTED_RENDERER_TYPE: 'TextField' is valid per spec 0.9.1 but deferred in this renderer (path=/components/TextField/component, hint: use the budgeted catalog types (see rendererSupport) or a dedicated flow instead)]
+NEGATIVE 4 (Video + AudioPlayer, not budgeted): [UNSUPPORTED_RENDERER_TYPE: 'Video' is valid per spec 0.9.1 but deferred in this renderer (path=/components/Video/component, hint: use the budgeted catalog types (see rendererSupport) or a dedicated flow instead), UNSUPPORTED_RENDERER_TYPE: 'AudioPlayer' is valid per spec 0.9.1 but deferred in this renderer (path=/components/AudioPlayer/component, hint: use the budgeted catalog types (see rendererSupport) or a dedicated flow instead)]
+NEGATIVE 5 (Image, not budgeted): [UNSUPPORTED_RENDERER_TYPE: 'Image' is valid per spec 0.9.1 but deferred in this renderer (path=/components/Image/component, hint: use the budgeted catalog types (see rendererSupport) or a dedicated flow instead)]
+NEGATIVE 6 (TrendChart inside EntityCard): [NESTING_NOT_ALLOWED: TrendChart inside EntityCard (path=/components/tc1/component, ancestors=[EntityCard, Column])]
+
+SUMMARY: 10 passed, 0 failed (positive); 6/6 negative controls detected (enum, missing required, unsupported renderer type x3, nesting).

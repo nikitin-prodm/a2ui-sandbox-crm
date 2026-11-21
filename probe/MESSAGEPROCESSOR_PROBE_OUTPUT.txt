@@ -1,0 +1,27 @@
+=== MessageProcessorProbe (A2uiCoreMessageProcessor end-to-end) ===
+artifact: androidx.a2ui:a2ui-engine:1.0.0-alpha02
+
+[1] A2uiCoreMessageProcessor instantiated with custom catalog: PASS
+[2] createSurface(demo) + updateComponents(root Column + m1 MetricCard) submitted: PASS
+[3] activeSurfaces contains surface id='demo': PASS
+[4] surface ComponentRegistry received MetricCard: PASS
+    registry.lastComponents = [A2uiComponentPayload(id=m1, type=MetricCard, properties={label=Overdue, value=2, trend=up})]
+    registry.errors = [root: A2uiValidationException(code=VALIDATION_FAILED, message=Component type 'Column' not found in catalog, path=/components/root)]
+[5] MetricCard with trend='spiral' (surface 'demo-bad'):
+    registry.errors = [root: A2uiValidationException(code=VALIDATION_FAILED, message=Component type 'Column' not found in catalog, path=/components/root), m2: A2uiValidationException(code=VALIDATION_FAILED, message=Value 'spiral' is not a valid enum value, path=/components/m2/trend)]
+    property-level error: YES -> FULL-SCHEMA validation in critical path (§7.2 variant b)
+    type-level error (expected, root Column unregistered): YES
+    verdict: surface actor validation = FULL-SCHEMA
+
+@RestrictTo (runtime reflection — INCONCLUSIVE for CLASS retention):
+  A2uiCoreMessageProcessor: no
+  A2uiCoreSchemaValidator:  no
+  A2uiJsonMessageParser:    no
+  Note: androidx annotations use RetentionPolicy.CLASS (kept in bytecode, NOT visible
+  to runtime reflection), so reflection alone CANNOT prove absence/presence.
+  Authoritative verification is javap bytecode analysis + AOSP source (see analysis.md
+  §7.2): A2uiCoreMessageProcessor = NO @RestrictTo; A2uiCoreSchemaValidator = YES
+  (RuntimeInvisibleAnnotations: androidx.annotation.RestrictTo(LIBRARY_GROUP_PREFIX));
+  A2uiJsonMessageParser = NO.
+
+SUMMARY: PASS (surface created, components delivered)

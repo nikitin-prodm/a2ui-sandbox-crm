@@ -1,0 +1,11 @@
+A2UI CRM Sandbox - verification summary
+date: 18.11.2026  1:46:38,60
+artifacts: androidx.a2ui:a2ui-model+a2ui-engine:1.0.0-alpha02, catalog: D:\Projects\A2UI_CRM\probe\..\catalog\catalog.json
+
+1. Protocol Compatibility Probe:  8/8 PASS   (v0.9/v0.9.1 accepted, 1.0 rejected)
+2. Round-Trip Probe:              10/10 PARSE_OK (envelope + structure)
+3. MVP CatalogValidator Probe:    10/10 PASS + 6/6 negative controls (enum, missing required, unsupported renderer type x3, nesting)
+4. Custom Catalog API Probe:      6/6 PASS (available)
+5. MessageProcessor Probe:        PASS (surface+components; surface actor validation=FULL-SCHEMA; @RestrictTo=no per javap+AOSP source)
+
+All five probes PASS. Reproduce: probe/run-all.bat (or run-all.sh)
