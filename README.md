@@ -2,7 +2,11 @@
 
 **The story:** Google shipped AI Studio and the Antigravity Agent - you type a prompt and get a full Kotlin/Jetpack Compose app. That’s great if you’re a developer building something from scratch. But what about the average user who doesn’t want to “create an app” - they just want *their* app to work the way *they* want? And what about companies that need custom UI tweaks but can’t wait for a vendor roadmap or pay for custom development?
 
-The obvious answer - let an agent edit the app after install - runs straight into Play Store policy: **apps can’t modify their own code**. So I went a different way. The app publishes a catalog of pre-approved components. The agent returns declarative A2UI JSON. The app validates it and renders it natively. **Validated data, not code.**
+The obvious answer - let an agent edit the app after install - runs straight into Play Store policy: **apps can’t modify their own code**. 
+So I went a different way: 
+1) The app publishes a catalog of pre-approved components.
+2) The agent returns declarative A2UI JSON.
+3) The app validates it and renders it natively. **Validated data, not code.**
 
 That’s the idea I vibe-coded into this PoC. It’s not a product. It’s a testbed for the architecture - a CRM domain, chosen because the “one UI for every role” problem is real and measurable.
 
