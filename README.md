@@ -8,6 +8,12 @@ That’s the idea I vibe-coded into this PoC. It’s not a product. It’s a tes
 
 Reference domain/UX: [TwentyMobile](https://github.com/adlucio87/TwentyMobile) (reference only, AGPL-3.0 - no code copied). Protocol: **A2UI 0.9.1** on `androidx.a2ui` 1.0.0-alpha02.
 
+## Why I built this
+
+I’m a product manager, not an Android engineer. I vibe-coded the renderer to test whether the idea holds. It does. The CRM is just the proving ground.
+
+**License:** Apache-2.0 (see `LICENSE`). Contribution guidelines in `CONTRIBUTING.md`.
+
 ---
 
 ## 📹 Demos
@@ -76,8 +82,4 @@ Verified on a real emulator (LDPlayer) with a real LLM: all reported bug scenari
 
 ---
 
-## Why I built this
 
-I’m a product manager, not an Android engineer. I vibe-coded the renderer to test whether the idea holds. It does. The CRM is just the proving ground.
-
-**License:** Apache-2.0 (see `LICENSE`). Contribution guidelines in `CONTRIBUTING.md`.
