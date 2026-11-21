@@ -72,11 +72,6 @@ All five probes must PASS; `probe/SUMMARY.txt` is the reproducible record.
 - Verified-on-an-emulator behavior is documented in `analysis.md`
   (uiautomator dumps live in `docs/screenshots/`).
 
-## Suggested repository topics (GitHub)
-
-`server-driven-ui`, `agentic-ui`, `llm-agents`, `jetpack-compose`, `kotlin`,
-`android`, `crm`, `a2ui`, `declarative-ui`, `prototype`
-
 ## PR checklist
 
 - [ ] `gradlew :feature:agentic:test :app:assembleDebug` green
