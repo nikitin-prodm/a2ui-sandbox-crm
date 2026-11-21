@@ -49,7 +49,7 @@ What all clips have in common: **the agent never writes code.** It returns A2UI 
 
 ---
 
-## Known limitations (honest)
+## Known limitations
 
 - The catalog doesn’t “suggest an alternative” out of the box — that’s a developer decision, not an agent feature.
 - Role switching doesn’t enforce permissions yet — that’s also a developer concern, not baked into the PoC.
