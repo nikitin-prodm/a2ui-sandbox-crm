@@ -114,8 +114,7 @@ Blocks 5.1–5.6 complete.
   tab icons (`{"shell":{"tabIcons":{...}}}`, validated against the renderer icon
   vocabulary — pure data).
   Live-verified on an emulator (LDPlayer, LLM qwen3.8-flash on): all 8 bug scenarios pass
-  via `uiautomator dump` + `shared_prefs` ground truth (see `../analysis.md`, «Блок 5.5 →
-  Живая верификация»). Two live-found fixes included: stage-row internals are no longer
+  via `uiautomator dump` + `shared_prefs` ground truth. Two live-found fixes included: stage-row internals are no longer
   listed flat at root (the renderer drew every funnel stage twice), and the native money
   formatter is pinned to `Locale.US` so native and twin amounts match on any device.
 
@@ -128,4 +127,4 @@ Blocks 5.1–5.6 complete.
 - Unit tests: 65/65 PASS. APK: `app/build/outputs/apk/debug/app-debug.apk`
   (`versionName 0.1.0-block54`).
 
-See `../analysis.md` §"Блок 5.4" (RU) for details.
+See `CONTRIBUTING.md` for the conventions and the PR checklist.

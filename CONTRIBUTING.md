@@ -57,7 +57,6 @@ All five probes must PASS; `probe/SUMMARY.txt` is the reproducible record.
 | `catalog/` | `catalog.json` - the approved component catalog (single source of truth) |
 | `probe/` | Reproducible verification against the real published `androidx.a2ui` artifacts |
 | `docs/` | Screenshots and UI-dump artifacts |
-| `analysis.md` | The full working journal (RU) - **read the relevant block before changing the area it covers** |
 
 ## Conventions
 
@@ -67,15 +66,14 @@ All five probes must PASS; `probe/SUMMARY.txt` is the reproducible record.
   closed sets: a new component needs a catalog entry + a renderer + tests.
 - Every behavioral fix gets a unit test where feasible (65 and counting) - the project's
   claims are backed by runnable evidence, not prose.
-- Keep `README.md` (EN, public-facing) and `analysis.md` (RU, journal) in sync: numbers
-  must match everywhere (tests count, probe results, budget).
-- Verified-on-an-emulator behavior is documented in `analysis.md`
-  (uiautomator dumps live in `docs/screenshots/`).
+- Keep `README.md` (EN, public-facing) accurate: numbers must match everywhere
+  (tests count, probe results, budget).
+- Verified-on-an-emulator behavior: uiautomator dumps live in `docs/screenshots/`.
 
 ## PR checklist
 
 - [ ] `gradlew :feature:agentic:test :app:assembleDebug` green
 - [ ] `probe/run-all.sh|.bat` - 5/5 PASS (if catalog/protocol touched)
 - [ ] No code or prose copied from `_reference/` (AGPL)
-- [ ] README + analysis.md updated if numbers/behavior changed
+- [ ] README updated if numbers/behavior changed
 - [ ] New behavior covered by a test or a documented live verification

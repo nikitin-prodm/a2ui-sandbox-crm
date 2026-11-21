@@ -146,6 +146,6 @@ enums, length limits) is the job of the CatalogValidator**, implemented and prob
 Domain model and UX patterns are referenced from the open-source
 [TwentyMobile](https://github.com/adlucio87/TwentyMobile) Flutter CRM (AGPL-3.0). This project
 uses it as a *reference only* — no code is copied; the Kotlin implementation is written from
-scratch following the same patterns (see `analysis.md`, License hygiene).
+scratch following the same patterns.
 
 License of this catalog: Apache-2.0.

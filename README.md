@@ -45,7 +45,6 @@ What all clips have in common: **the agent never writes code.** It returns A2UI 
 - **`catalog/README.md`** - catalog documentation (`spec_support` semantics, validation contract, renderer-side conventions).
 - **`app/`** - the Kotlin/Compose prototype: `:app`, `:feature:agentic` (A2UI layer + agent pipeline), `:core:domain`, `:core:data`.
 - **`probe/`** - reproducible verification against the real published `androidx.a2ui` artifacts.
-- **`analysis.md`** - full working journal (RU): feasibility gates, domain extension, screens, architecture decision (native Kotlin/Compose, Variant B), risks.
 
 **Architecture notes:**
 
@@ -82,7 +81,7 @@ cd app && gradlew.bat :feature:agentic:test :app:assembleDebug
 
 Expected: **65/65** unit tests pass + `app-debug.apk` is built.
 
-Verified on a real emulator (LDPlayer) with a real LLM: all reported bug scenarios re-checked via `uiautomator` dumps (see `analysis.md`).
+Verified on a real emulator (LDPlayer) with a real LLM: all reported bug scenarios re-checked via `uiautomator` dumps.
 
 ---
 
