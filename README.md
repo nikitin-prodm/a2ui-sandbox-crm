@@ -1,4 +1,4 @@
-# A2UI CRM Sandbox - agent-composed screens without code generation
+# A2UI Sandbox CRM - agent-composed screens without code generation
 
 **The story:** Google shipped AI Studio and the Antigravity Agent - you type a prompt and get a full Kotlin/Jetpack Compose app. That’s great if you’re a developer building something from scratch. But what about the average user who doesn’t want to “create an app” - they just want *their* app to work the way *they* want? And what about companies that need custom UI tweaks but can’t wait for a vendor roadmap or pay for custom development?
 
