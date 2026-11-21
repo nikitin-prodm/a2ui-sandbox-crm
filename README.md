@@ -22,7 +22,7 @@ All clips were recorded on a real emulator, sped up where the agent latency was 
 
 | # | What it shows | Clip |
 |---|---|---|
-| 1 | **Analytics - show deals under each funnel stage.** `"show deals"` → the funnel is populated with deal cards under each stage. | [Clip - analytics-1-show-deals.mp4](docs/videos/analytics-1-show-deals.mp4) |
+| 1 | **Analytics - show deals under each funnel stage.** `"show deals"` → the funnel is populated with deal cards under each stage. | <video src="docs/videos/analytics-1-show-deals.mp4" width="320" height="240" controls></video> [Clip - analytics-1-show-deals.mp4](docs/videos/analytics-1-show-deals.mp4) |
 | 2 | **Analytics - cut zeroes and sort by amount.** `"delete grey, sort by amount"` → empty rows disappear, deals are ordered by value. | [Clip - analytics-2-sort-by-amount.mp4](docs/videos/analytics-2-sort-by-amount.mp4) |
 | 3 | **Analytics - add a chart and move it down.** `"add a chart, move down"` → a TrendChart appears, positioned below the funnel. | [Clip - analytics-3-chart.mp4](docs/videos/analytics-3-chart.mp4) |
 | 4 | **My Day - add completed tasks.** `"add completed tasks"` → the list now includes completed items alongside active ones. | [Clip - myday-1-completed-tasks.mp4](docs/videos/myday-1-completed-tasks.mp4) |
