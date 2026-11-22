@@ -2,7 +2,7 @@
 
 **I built a PoC in the form of a mobile CRM to test one hypothesis: what if an app on an Android phone could rearrange its own interface without generating any code?**
 
-**The problem, and what got me interested**
+**The problem, and what got me interested**.
 I'm a product manager, and as it happened, vibe-coding became part of my daily work.
 While building prototypes and MVPs, I noticed something simple: the cost of a single development iteration – any adjustment, any correction – dropped dramatically. In practice, I stopped asking myself "should we do it or not?", because "do it" now costs pennies. And if the cost of adjustments in general dropped, then the cost of individual adjustments – for a specific user, for a specific task – dropped too.
 
@@ -13,10 +13,10 @@ But I'm convinced users and businesses need something else: a cheap way to tweak
 - Businesses hit the same wall from the other side. Waiting for the vendor to ship your customization, or paying extra for it – slow, expensive, and often impossible to get approved.
 The obvious path is to let an agent modify the app after install – but that runs straight into Google Play policy: no code changes after install.
 
-**So I went the other way**
+**So I went the other way**.
 A month ago Google published an Android implementation of the open A2UI protocol (androidx.a2ui, version 1.0.0-alpha02). The idea inside: an AI agent doesn't write the code for a screen, it writes a description – structured JSON with a defined schema. Essentially, HTML for AI agents: the agent "writes the page", the app acts as the browser that renders it.
 
-**What I found out**
+**What I found out**.
 A2UI does have a published Flutter renderer (maintained by the Flutter team, works great on Android). So if you're building a Flutter app – you're covered, no renderer needed. What hasn't been published anywhere is a renderer for Jetpack Compose / native Android. In androidx.a2ui, that branch ships only a parser and a validator, not a drawing layer. That gap is partly what this project fills: a Compose renderer built on top of the androidx.a2ui alpha.
 
 **What I took from androidx.a2ui**
@@ -24,15 +24,15 @@ A2UI does have a published Flutter renderer (maintained by the Flutter team, wor
 - schema validation with machine-readable errors, so the agent can fix its own JSON,
 - the ability to register my own UI component types on top of the built-in ones.
 
-**What I had to build around it**
+**What I had to build around it**.
 - A component catalog. The single source of truth: 10 CRM components (a KPI card, a sales funnel strip, a trend chart, a leaderboard row…), each with its allowed properties and values, plus a whitelist of allowed actions. Anything not in the catalog cannot reach the screen.
 - The renderer. Google didn't publish the drawing layer, so it had to come from somewhere. I designed what the catalog should contain and how validation works, set the task – and an AI coding agent (GLM-5.3 in Cline, inside VS Code) wrote the Compose code that draws the components on screen. Descriptions composed by the in-app agent turn into real native UI.
 - A local action dispatcher. In a normal app, every button's handler is written by the developer in advance. But buttons the agent creates on the fly – the developer never anticipated those, there's no ready handler. Shipping executable logic along with the button isn't allowed (that would be exactly the "code modification after install" we're avoiding). So a tap is treated as data: an action name + context. The dispatcher matches the name against the catalog's action whitelist and invokes one of the pre-compiled handlers (complete a task, create a task, open a deal). In the full A2UI design, taps travel back to the agent instead – the engine classes for that already exist, but in the alpha only Google's own (unpublished) renderer can feed actions into them; for third-party renderers there's no way in, so taps are handled locally.
 
-**How it works**
+**How it works**.
 The user types (or says) "show deals under each funnel stage" → the agent returns A2UI JSON → two validation layers check it (my catalog validator first, then Google's engine) → out-of-catalog requests are rejected with an error the agent can self-correct on → the renderer draws the result natively, as a composition of approved parts – no code generation.
 
-**Conclusions, and why this matters to me**
+**Conclusions, and why this matters to me**.
 The concept itself is no longer in question – the A2UI ecosystem has working renderers for React, Flutter, Angular, Lit, and SwiftUI. But on Android the picture is different: Google published only the protocol layer (and it's an alpha), no renderer and no public API for user actions. In other words, the "native" trail on Android is the one nobody has walked yet.
 My question was: "Can a regular app developer fill in the missing pieces on top of the alpha and end up with working, agent-editable screens?" If yes, developers ship less hardcoded UI, integration costs for businesses go down, and users stop deleting apps over a button's placement or a missing filter. The answer turned out to be "yes" – with caveats, which I described above.
 My hypothesis: the new core job of dev teams will be populating the component catalog and designing the contract for how agents interact with those components.
