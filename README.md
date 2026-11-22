@@ -3,10 +3,22 @@
 **The story:** Google shipped AI Studio and the Antigravity Agent - you type a prompt and get a full Kotlin/Jetpack Compose app. That’s great if you’re a developer building something from scratch. But what about the average user who doesn’t want to “create an app” - they just want *their* app to work the way *they* want? And what about companies that need custom UI tweaks but can’t wait for a vendor roadmap or pay for custom development?
 
 The obvious answer - let an agent edit the app after install - runs straight into Play Store policy: **apps can’t modify their own code**. 
-So I went a different way: 
-1) The app publishes a catalog of pre-approved components.
-2) The agent returns declarative A2UI JSON.
-3) The app validates it and renders it natively. **Validated data, not code.**
+**So I went the other way: **
+A few weeks ago Google published a small, very alpha library called A2UI (androidx.a2ui, version 1.0.0-alpha02). The idea inside it: an AI agent doesn't write code for a screen, it writes a description - structured JSON with a defined schema. Think HTML for AI agents: the agent "writes the page," the app "renders the browser."
+Crucially, Google published only the protocol layer: the parser and the validator that take the agent's JSON and either accept it or reject it with precise errors. The part that actually draws pixels on screen is not published.
+**What I took from it:**
+The protocol layer was exactly the missing piece for the no-code-after-install problem. If the agent's output is data, not code - Play Store policy has nothing against data. So I took:
+- the message envelope (create a screen, update components - all parsed and validated by Google's own code, protocol version 0.9.1),
+- the schema validation with precise, machine-readable errors,
+- the ability to register my own component types on top of the built-in ones.
+**What I had to build around it (what app developer should do to comply with a2ui):**
+1. A component catalog. The single source of truth: 10 CRM components (KPI card, sales funnel strip, trend chart, leaderboard row…), each with its allowed properties and values, plus a whitelist of allowed actions. Anything not in the catalog cannot reach the screen.
+2. The renderer. Google didn't ship the drawing layer, so it had to come from somewhere - and I'm a product manager, not an Android engineer. I built it by vibe-coding: I designed what the catalog should contain, how validation works, and how the architecture fits together, and an AI coding agent (GLM-5.3 agent in Cline (VS Code) wrote the Compose code that draws the components on screen. The result renders the agent's descriptions as real native UI.
+3. A local action dispatcher. If the app can't change its code, it still has to *do* something when you tap a button. Taps are matched against the catalog's action whitelist and mapped to real repository calls (complete a task, create a task, open a deal) — handled locally, no code generation.
+**How it works end-to-end:**
+User types (or says) *"show deals under each funnel stage"* → the agent returns A2UI JSON → two validation layers check it (my catalog validator first, then Google's engine) → out-of-catalog requests are refused with an error the agent can self-correct on → the renderer draws it natively.
+**Not code generation - composition from approved parts.**
+**Why it matters to me: **the concept itself is no longer in question - the A2UI ecosystem has working renderers for React, Flutter, SwiftUI. But on Android, the picture is different: Google has published only the protocol layer (an alpha), no renderer, and no public API for user actions. In other words, the leg of this idea that runs on Android was exactly the leg nobody had walked yet. My question was "can a regular app developer complete the missing pieces on top of the alpha and end up with a working, validated, native screen?" If yes, developers ship fewer rigid UI variants, and users stop abandoning
 
 That’s the idea I vibe-coded into this PoC. It’s not a product. It’s a testbed for the architecture - a CRM domain, chosen because the “one UI for every role” problem is real and measurable.
 
