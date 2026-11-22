@@ -1,29 +1,41 @@
 # A2UI Sandbox CRM - agent-composed screens without code generation
 
-**The story:** Google shipped AI Studio and the Antigravity Agent - you type a prompt and get a full Kotlin/Jetpack Compose app. That’s great if you’re a developer building something from scratch. But what about the average user who doesn’t want to “create an app” - they just want *their* app to work the way *they* want? And what about companies that need custom UI tweaks but can’t wait for a vendor roadmap or pay for custom development?
+**I built a PoC in the form of a mobile CRM to test one hypothesis: what if an app on an Android phone could rearrange its own interface without generating any code?**
 
-The obvious answer - let an agent edit the app after install - runs straight into Play Store policy: **apps can’t modify their own code**. 
+**The problem, and what got me interested**
+I'm a product manager, and as it happened, vibe-coding became part of my daily work.
+While building prototypes and MVPs, I noticed something simple: the cost of a single development iteration – any adjustment, any correction – dropped dramatically. In practice, I stopped asking myself "should we do it or not?", because "do it" now costs pennies. And if the cost of adjustments in general dropped, then the cost of individual adjustments – for a specific user, for a specific task – dropped too.
 
-**So I went the other way:**
-A few weeks ago Google published a small, very alpha library called A2UI (androidx.a2ui, version 1.0.0-alpha02). The idea inside it: an AI agent doesn't write code for a screen, it writes a description - structured JSON with a defined schema. Think HTML for AI agents: the agent "writes the page," the app "renders the browser."
-Crucially, Google published only the protocol layer: the parser and the validator that take the agent's JSON and either accept it or reject it with precise errors. The part that actually draws pixels on screen is not published.
+In parallel, Google shipped the Antigravity Agent: you type a prompt – you get a complete app. "The future is here." Great software for people who know how to build from scratch: small dev studios, and, I think, quasi-freelance micro-businesses that build apps on order.
 
-**What I took from it:**
-The protocol layer was exactly the missing piece for the no-code-after-install problem. If the agent's output is data, not code - Play Store policy has nothing against data. So I took:
-- the message envelope (create a screen, update components - all parsed and validated by Google's own code, protocol version 0.9.1),
-- the schema validation with precise, machine-readable errors,
-- the ability to register my own component types on top of the built-in ones.
+But I'm convinced users and businesses need something else: a cheap way to tweak the interface of an already installed app.
+- Users don't know how to write requirements. That's what systems analysts are for. And even if an agent played that role perfectly, nobody wants to sit there answering a bot's questions in the "what exactly do you mean?" format.
+- Businesses hit the same wall from the other side. Waiting for the vendor to ship your customization, or paying extra for it – slow, expensive, and often impossible to get approved.
+The obvious path is to let an agent modify the app after install – but that runs straight into Google Play policy: no code changes after install.
 
-**What I had to build around it (what app developer should do to comply with a2ui):**
-1. A component catalog. The single source of truth: 10 CRM components (KPI card, sales funnel strip, trend chart, leaderboard row…), each with its allowed properties and values, plus a whitelist of allowed actions. Anything not in the catalog cannot reach the screen.
-2. The renderer. Google didn't ship the drawing layer, so it had to come from somewhere - and I'm a product manager, not an Android engineer. I built it by vibe-coding: I designed what the catalog should contain, how validation works, and how the architecture fits together, and an AI coding agent (GLM-5.3 agent in Cline (VS Code) wrote the Compose code that draws the components on screen. The result renders the agent's descriptions as real native UI.
-3. A local action dispatcher. If the app can't change its code, it still has to *do* something when you tap a button. Taps are matched against the catalog's action whitelist and mapped to real repository calls (complete a task, create a task, open a deal) — handled locally, no code generation.
+**So I went the other way**
+A month ago Google published an Android implementation of the open A2UI protocol (androidx.a2ui, version 1.0.0-alpha02). The idea inside: an AI agent doesn't write the code for a screen, it writes a description – structured JSON with a defined schema. Essentially, HTML for AI agents: the agent "writes the page", the app acts as the browser that renders it.
 
-**How it works end-to-end:**
-User types (or says) *"show deals under each funnel stage"* → the agent returns A2UI JSON → two validation layers check it (my catalog validator first, then Google's engine) → out-of-catalog requests are refused with an error the agent can self-correct on → the renderer draws it natively.
-**Not code generation - composition from approved parts.**
+**What I found out**
+A2UI does have a published Flutter renderer (maintained by the Flutter team, works great on Android). So if you're building a Flutter app – you're covered, no renderer needed. What hasn't been published anywhere is a renderer for Jetpack Compose / native Android. In androidx.a2ui, that branch ships only a parser and a validator, not a drawing layer. That gap is partly what this project fills: a Compose renderer built on top of the androidx.a2ui alpha.
 
-****Why it matters to me:** the concept itself is no longer in question - the A2UI ecosystem has working renderers for React, Flutter, SwiftUI. But on Android, the picture is different: Google has published only the protocol layer (an alpha), no renderer, and no public API for user actions. In other words, the leg of this idea that runs on Android was exactly the leg nobody had walked yet. My question was "can a regular app developer complete the missing pieces on top of the alpha and end up with a working, validated, native screen?" If yes, developers ship fewer rigid UI variants, and users stop abandoning
+**What I took from androidx.a2ui**
+- the JSON format the agent produces (create a surface, update components – all parsed and validated by Google's own code, protocol version 0.9.1),
+- schema validation with machine-readable errors, so the agent can fix its own JSON,
+- the ability to register my own UI component types on top of the built-in ones.
+
+**What I had to build around it**
+- A component catalog. The single source of truth: 10 CRM components (a KPI card, a sales funnel strip, a trend chart, a leaderboard row…), each with its allowed properties and values, plus a whitelist of allowed actions. Anything not in the catalog cannot reach the screen.
+- The renderer. Google didn't publish the drawing layer, so it had to come from somewhere. I designed what the catalog should contain and how validation works, set the task – and an AI coding agent (GLM-5.3 in Cline, inside VS Code) wrote the Compose code that draws the components on screen. Descriptions composed by the in-app agent turn into real native UI.
+- A local action dispatcher. In a normal app, every button's handler is written by the developer in advance. But buttons the agent creates on the fly – the developer never anticipated those, there's no ready handler. Shipping executable logic along with the button isn't allowed (that would be exactly the "code modification after install" we're avoiding). So a tap is treated as data: an action name + context. The dispatcher matches the name against the catalog's action whitelist and invokes one of the pre-compiled handlers (complete a task, create a task, open a deal). In the full A2UI design, taps travel back to the agent instead – the engine classes for that already exist, but in the alpha only Google's own (unpublished) renderer can feed actions into them; for third-party renderers there's no way in, so taps are handled locally.
+
+**How it works**
+The user types (or says) "show deals under each funnel stage" → the agent returns A2UI JSON → two validation layers check it (my catalog validator first, then Google's engine) → out-of-catalog requests are rejected with an error the agent can self-correct on → the renderer draws the result natively, as a composition of approved parts – no code generation.
+
+**Conclusions, and why this matters to me**
+The concept itself is no longer in question – the A2UI ecosystem has working renderers for React, Flutter, Angular, Lit, and SwiftUI. But on Android the picture is different: Google published only the protocol layer (and it's an alpha), no renderer and no public API for user actions. In other words, the "native" trail on Android is the one nobody has walked yet.
+My question was: "Can a regular app developer fill in the missing pieces on top of the alpha and end up with working, agent-editable screens?" If yes, developers ship less hardcoded UI, integration costs for businesses go down, and users stop deleting apps over a button's placement or a missing filter. The answer turned out to be "yes" – with caveats, which I described above.
+My hypothesis: the new core job of dev teams will be populating the component catalog and designing the contract for how agents interact with those components.
 
 That’s the idea I vibe-coded into this PoC. It’s not a product. It’s a testbed for the architecture - a CRM domain, chosen because the “one UI for every role” problem is real and measurable.
 
